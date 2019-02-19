@@ -1,0 +1,9 @@
+# The environment files
+./Crawler_Linux
+./Reacher*
+ddpg_agent.py
+*png
+*.log
+.idea/
+.ipynb_checkpoints/
+__pycache__/
