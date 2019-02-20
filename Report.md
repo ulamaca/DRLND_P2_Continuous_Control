@@ -35,3 +35,17 @@ github: tnakae
 
 https://stanford.edu/~shervine/blog/pytorch-how-to-generate-data-parallel
 
+Appendix: 
+    data shape in the program
+    #t_max=1000, n_agent=20
+    actions has shape: torch.Size([20000, 4])
+    rewards has shape: torch.Size([1000, 20])
+    states has shape: torch.Size([20000, 33])
+    log_probs has shape: torch.Size([20000])
+    values has shape: torch.Size([20000])
+    last_values has shape: torch.Size([20])
+    last_dones has shape: torch.Size([20])
+
+
+J(\theta)= E_{\tau\sim\pi,p}R(\tau)=E_{\tau\sim\pi_{old},p}[\frac{\pi}{\pi_{old}}R(\tau)]
+\nabla J(\theta) = \nabla E_{\tau\sim\pi_{old},p}[\frac{\pi}{\pi_{old}}R(\tau)] \sim \nabla

@@ -1,6 +1,7 @@
 # The environment files
 ./Crawler_Linux
 ./Reacher*
+./data/saved
 ddpg_agent.py
 *png
 *.log

@@ -204,7 +204,7 @@ class GaussianActorCriticNetwork(GaussianPolicyNetwork):
     # todo, may further simplify this part beacuse of highly repeatable
     def forward(self, states, actions=None):
         phi = self.fc_hidden(states)
-        mu = F.tanh(self.fc_actor(phi))
+        mu = torch.tanh(self.fc_actor(phi))
         value = self.fc_critic(phi).squeeze(-1)
 
         dist = torch.distributions.Normal(mu, F.softplus(self.sigma))
