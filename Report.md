@@ -7,10 +7,10 @@ With tricks of importance sampling, surrogate objectives, and surrogate clipping
 This technique enhances data efficiency greatly by creating off-policy learning (improving a policy other than the trajectory generating one) alike capability for PG algorithm. 
 
 ### **Implementation**
-My implementation is based on the idea of Algorithm 1 in John Schulman et al's 2017 paper: [Algorithm 1][image2]
+My implementation is based on the idea of Algorithm 1 in John Schulman et al's 2017 paper: ![Algorithm 1][image2]
 
 
-where policy ($\pi$) is a Gaussian whose mean and variance are tuneable (the mean $\mu$ is represented by a multi-layer fully perceptron whereas the variance is parametrized seperately by another independent set of variables). 
+where policy is a Gaussian whose mean and variance are tuneable (the mean $\mu$ is represented by a multi-layer fully perceptron whereas the variance is parametrized seperately by another independent set of variables). 
 The value function is constructed by a NN sharing the main body with the policy and the output a 1-d state value.
 The advantage is estimated through generalized value estimation (GAE) and it is standardized over trajectories.
 
@@ -28,9 +28,9 @@ The agent solves the environment in 187 episodes. The total time elapsed is 1198
 ### **Future Work**
 - Future experiments:
     - Compare performance of different value estimators to see if GAE is really the best. The currently available options are:
-        - 1. Monte-Carlo value estimate: the $R_t^{\text{future}}$ in PPO lecture and note that critic is not necessary in this case. 
-        - 2. Direct value estimate: $V(s_t)$
-        - 3. Advantage: $R_t^{\text{future}}$ - $V(s_t)$, the advantage estimate used in A3C paper 
+        - 1. Monte-Carlo value estimate: the future reward in PPO lecture and note that critic is not necessary in this case. 
+        - 2. Direct value estimate: using the state value function for each state directly
+        - 3. Advantage: i.e. 1.-2., the advantage estimate used in A3C paper 
     - Make it work in OpenAI Gym environments to see how well they work and do benchmarking.
 - The current version is using multiple agents but not written in a genuinely parallel way. Therefore, it will be worthy to delve deeper into parallelization tools such as [MPI](http://mpitutorial.com/tutorials/mpi-introduction/) to further boost learning efficiency.  
 - Compare the current implementation to SOTA methods able to solve continuous problems such as Soft Actor-Critic and D4PG/DDPG to compare their individual learning efficacy/efficiency.
