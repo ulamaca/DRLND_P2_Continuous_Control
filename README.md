@@ -68,5 +68,5 @@ python play.py -p path/to/model-params
 ```
 If you did not get one, try out
 ```
-plot.py -l ./data/saved
+plot.py play.py -p ./data/saved/checkpoint.pth
 ```
