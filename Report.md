@@ -28,9 +28,9 @@ The agent solves the environment in 187 episodes. The total time elapsed is 1198
 ### **Future Work**
 - Future experiments:
     - Compare performance of different value estimators to see if GAE is really the best. The currently available options are:
-        - 1. Monte-Carlo value estimate: the future reward in PPO lecture and note that critic is not necessary in this case. 
-        - 2. Direct value estimate: using the state value function for each state directly
-        - 3. Advantage: i.e. 1.-2., the advantage estimate used in A3C paper 
+        1. Monte-Carlo value estimate: the future reward in PPO lecture and note that critic is not necessary in this case. 
+        2. Direct value estimate: using the state value function for each state directly
+        3. Advantage: i.e. 1.-2., the advantage estimate used in A3C paper 
     - Make it work in OpenAI Gym environments to see how well they work and do benchmarking.
 - The current version is using multiple agents but not written in a genuinely parallel way. Therefore, it will be worthy to delve deeper into parallelization tools such as [MPI](http://mpitutorial.com/tutorials/mpi-introduction/) to further boost learning efficiency.  
 - Compare the current implementation to SOTA methods able to solve continuous problems such as Soft Actor-Critic and D4PG/DDPG to compare their individual learning efficacy/efficiency.
@@ -42,7 +42,7 @@ Research Papers:
 - [Soft Actor Critic 2018](https://arxiv.org/abs/1801.01290)
 
 Related works:
-- [tnakae: Udacity-DeepRL-p2-Continuous; greatly appreciated for this work, really helpful for my implementation](https://github.com/tnakae/Udacity-DeepRL-p2-Continuous)
+- [tnakae: Udacity-DeepRL-p2-Continuous](https://github.com/tnakae/Udacity-DeepRL-p2-Continuous)(greatly appreciated for this work/author, really helpful for my implementation)
 - [A detailed example of how to generate your data in parallel with PyTorch](https://stanford.edu/~shervine/blog/pytorch-how-to-generate-data-parallel)
 
 
@@ -57,7 +57,7 @@ Hyperparameters
 | Agent Model Arch (Policy)           | [in, 512, 256, out] |
 | Agent Model Arch (Critic)*1         | [in, 512, 256, 1] |
 | Trajectory Length (t_max)           | 1000 steps|
-| PPO SDG Epoch                       | 3    |
+| PPO SGD Epoch                       | 3    |
 | PPO mini-batch size                 | 256  |
 | gamma (discount factor)          | 0.99  |
 | GAE lambda*2                          | 0.96  |

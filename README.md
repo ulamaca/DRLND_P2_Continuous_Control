@@ -52,7 +52,7 @@ git clone git@github.com:ulamaca/DRLND_P2_Continuous_Control.git
 ```
 4. Follow the instructions to download the multi-agent version environment from the [Getting Started](https://github.com/udacity/deep-reinforcement-learning/tree/master/p2_continuous-control) section in Udacity DRLND repo.
 
-5. Place the env files in the root of the project and rename the directory as "Reacher_Multi_Linux"
+5. Place the env directory in the root of the project and rename it as "Reacher_Multi_Linux"
  
 ### Instructions
 1. To train a PPO agent from scratch, execute in the command line:
@@ -71,3 +71,4 @@ python plot.py -l ppo_gae
 ```
 python play.py -p path/to/model-params 
 ```
+If you did not get one, try plot.py -l saved
