@@ -35,11 +35,6 @@ The barrier for solving the second version of the environment is slightly differ
 
 The environment is considered solved, when the average (over 100 episodes) of those average scores is at least +30.  
 
-### Instructions
-
-Follow the instructions in `Continuous_Control.ipynb` to get started with training your own agent!  
-
-
 ### Prerequisites
 1. Please first setup a Python3 [Anaconda](https://www.anaconda.com/download) environment. 
 2. Then install the requirements for the project through:
@@ -71,4 +66,7 @@ python plot.py -l ppo_gae
 ```
 python play.py -p path/to/model-params 
 ```
-If you did not get one, try plot.py -l saved
+If you did not get one, try out
+```
+plot.py -l ./data/saved
+```

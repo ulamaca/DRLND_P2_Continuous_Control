@@ -42,7 +42,7 @@ Research Papers:
 - [Soft Actor Critic 2018](https://arxiv.org/abs/1801.01290)
 
 Related works:
-- [tnakae: Udacity-DeepRL-p2-Continuous](https://github.com/tnakae/Udacity-DeepRL-p2-Continuous)(greatly appreciated for this work/author, really helpful for my implementation)
+- [tnakae: Udacity-DeepRL-p2-Continuous](https://github.com/tnakae/Udacity-DeepRL-p2-Continuous) (greatly appreciated for the work/author, really helpful for my implementation)
 - [A detailed example of how to generate your data in parallel with PyTorch](https://stanford.edu/~shervine/blog/pytorch-how-to-generate-data-parallel)
 
 
