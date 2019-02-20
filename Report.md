@@ -1,51 +1,56 @@
-My PPO implementation follows basically from the John Schulman's 2017 paper, the algorithm x.x. 
-PPO tries to solve the data inefficiency problem in ordinary PG problem.
-The current version of the code is using future reward formulation as value estimate.
+### **Algorithms**
+In this project, I used Proximal Policy Optimization (PPO, Shulman2017) to solve Reacher Environment. PPO aims to solve a major limitation in policy gradients methods: data inefficeincy. Each trajectory can validly be used for updating the policy network once in PG, which is wasteful, especially when the generation process is slow, resource-consuming or even dangerous. With tricks of importance sampling, surrogate objectives, and surrogate clipping, the policy network can then be updated multiple times using a generated trajectory (generated from an "old policy") without losing track from the true objective function. This technique enhances data effiency greatly by creating off-policy learning (improving a policy other than the trajectory generating one) alike capability for PG algorithm. 
 
-Importance sampling, and Surrogate loss clipping are the two main tricks here.
-I use torch.dataset to construct the trajectories memory for updating
-
-My algorithm is limited to reach around 60-70 in CartPole problem. Potential problem still exist in the code, 
-which requires more dedicated look (ask for help)
-
-I think my data formatting is the biggest problem
-    - I should look back to my old reinforce implementation
-    - also learn from tnakae to see his data formatting
-
-More things to do, I may implement    
-
-Reference:
-github: tnakae
-- data formatting:
-    t_max=128, n_agents=20
-    states, data shape: torch.Size([128, 20, 33])
-    actions, data shape: torch.Size([128, 20, 4])
-    next_states, data shape: torch.Size([128, 20, 33])
-    rewards, data shape: torch.Size([128, 20])
-    log_probs, data shape: torch.Size([128, 20])
-    values, data shape: torch.Size([128, 20])
-    dones, data shape: torch.Size([128, 20])
-    advantages, data shape: torch.Size([128, 20])
-    then, it will be reformatted
-    returns, data shape: torch.Size([128, 20])
-    advantages shape: torch.Size([2560])
-    advantages_batch shape: torch.Size([128])
+### **Implementation**
+My implementation is based on the idea of Algorithm 1 in John Schulman et al's 2017 paper: 
 
 
+where policy ($\pi$) is a Gaussian whose mean and variance are tuneable (the mean $\mu$ is represented by a multi-layer fully perceptron whereas the variance is parametrized seperately by another independent set of variables). The advantage is estimated through generalized value estimation (GAE).
 
-https://stanford.edu/~shervine/blog/pytorch-how-to-generate-data-parallel
+In addition, the actor loop for trejectories collection in Algorithm 1 is a perfect fit for parallelization. Parallelization enables efficient data collection (which may accelerate learning) and gathers potentially diverse experience data via, for example, adopting different exploration strategy in each thread. I thus choose multi-agent version of the environment to take advantage of such nature. A buffer (MAReacherTrajectories) is created for storing trajectories using torch.utils.data to organize the data format and mini-batch generation. Note that the current implementation using only fixed exploring strategy (the current policy)
 
-Appendix: 
-    data shape in the program
-    #t_max=1000, n_agent=20
-    actions has shape: torch.Size([20000, 4])
-    rewards has shape: torch.Size([1000, 20])
-    states has shape: torch.Size([20000, 33])
-    log_probs has shape: torch.Size([20000])
-    values has shape: torch.Size([20000])
-    last_values has shape: torch.Size([20])
-    last_dones has shape: torch.Size([20])
+### **Results**  
+
+#### **Statistics**
+[image1]: ./data/ppo_gae.png 
+
+![Figure1][image1]
+The agent solves the environment in 187 episodes. The total time elapsed is 1198.3300256729126 second (~20 minutes in my Dell XPS13 laptop, 4CPU, 16G memory)
+
+**Video recording of a trained agent**
+
+### **Future Work**
+- compare the result with other PG based methods
+- play with the latest Soft-Actor Critic.
+
+### **Reference**
+Research Papers:
+- [Proximal Policy Optimization 2017](https://www.nature.com/articles/nature14236)
+- [Dueling DQN 2016](https://arxiv.org/abs/1511.06581)
+- [Double DQN 2016](https://arxiv.org/abs/1509.06461)
+
+Related Projects:
+- [tnakae: Udacity-DeepRL-p2-Continuous]
+(https://github.com/tnakae/Udacity-DeepRL-p2-Continuous)
 
 
-J(\theta)= E_{\tau\sim\pi,p}R(\tau)=E_{\tau\sim\pi_{old},p}[\frac{\pi}{\pi_{old}}R(\tau)]
-\nabla J(\theta) = \nabla E_{\tau\sim\pi_{old},p}[\frac{\pi}{\pi_{old}}R(\tau)] \sim \nabla
+
+### **Appendix**
+1. Key equations and the corresponding lines of codes in the project are summarized in ![./equations.png](./equations.png) 
+2. Hyperparameters
+
+| Hyperparameter                      | Value |
+| ----------------------------------- | ----- |
+| Agent Model Type                    | MLP   |
+| Agent Model Arch                    | [in, 20, 20, out] |
+| Update (Learning) Frequency         | every 4 steps |
+| Replay buffer size                  | 1e5   |
+| Batch size                          | 64    |
+| $\gamma$ (discount factor)          | 0.99  |
+| Optimizer                           | Adam  |
+| Learning rate                       | 5e-4  |
+| Soft-Update (*1)                      | True  |
+| $\tau$ (soft-update mixing rate)    | 1e-3  |
+| $\epsilon$ (exploration rate) start | 1.0   |
+| $\epsilon$ minimum                  | 0.1   |
+| $\epsilon$ decay                    | 0.995 |
