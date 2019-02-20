@@ -1,3 +1,5 @@
+[image1]: ./data/ppo_gae.png 
+[image2]: ./data/ppo_algorithm1
 ### **Algorithms**
 In this project, I used Proximal Policy Optimization (PPO) to solve Unity Reacher Environment. PPO aims to solve a major limitation in policy gradients methods: data inefficeincy. 
 Each trajectory can validly be used for updating the policy network only once in Policy Gradients (PG). This is wasteful especially when the generation process is slow, resource-consuming or even dangerous.  
@@ -5,7 +7,7 @@ With tricks of importance sampling, surrogate objectives, and surrogate clipping
 This technique enhances data efficiency greatly by creating off-policy learning (improving a policy other than the trajectory generating one) alike capability for PG algorithm. 
 
 ### **Implementation**
-My implementation is based on the idea of Algorithm 1 in John Schulman et al's 2017 paper: 
+My implementation is based on the idea of Algorithm 1 in John Schulman et al's 2017 paper: [Algorithm 1][image2]
 
 
 where policy ($\pi$) is a Gaussian whose mean and variance are tuneable (the mean $\mu$ is represented by a multi-layer fully perceptron whereas the variance is parametrized seperately by another independent set of variables). 
@@ -17,7 +19,6 @@ In addition, the actor loop for trajectories collection in Algorithm 1 is a perf
 ### **Results**  
 
 #### **Statistics**
-[image1]: ./data/ppo_gae.png 
 
 ![Figure1][image1]
 The agent solves the environment in 187 episodes. The total time elapsed is 1198.3300256729126 second (~20 minutes in my Dell XPS13 laptop, 4CPU, 16G memory)
