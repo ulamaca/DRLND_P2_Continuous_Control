@@ -12,15 +12,14 @@ if __name__ == "__main__":
     hyperparams = {"t_max": 1000, # maximal possible t_step is only 1000
                    "SGD_epoch": 3,
                    "gamma": 0.99,
-                   "n_episodes": 3,
+                   "n_episodes": 200,
                    "grad_clip": 0.5,
                    "epsilon": 0.1,
                    "beta": 0.01}  # cf. tnakae
     dataloader_params = {'batch_size': 256,
                          'shuffle': True,
                          'num_workers': 4}
-    setting = {"multi_env": True,
-               "plotting": True}
+    setting = {"multi_env": True}
 
     if setting["multi_env"]:
         env = UnityEnvironment(file_name='./Reacher_Multi_Linux/Reacher.x86')
@@ -44,11 +43,3 @@ if __name__ == "__main__":
     with open(os.path.join('./data/ppo_gae/progress.txt'), 'w') as myfile:
         myfile.write(str(scores))
     myfile.close()
-
-    if setting["plotting"]:
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        plt.plot(np.arange(1, len(scores) + 1), scores)
-        plt.ylabel('Score')
-        plt.xlabel('Episode #')
-        plt.show()

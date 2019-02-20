@@ -3,7 +3,6 @@
 ./Reacher*
 ./data/saved
 ddpg_agent.py
-*png
 *.log
 .idea/
 .ipynb_checkpoints/
