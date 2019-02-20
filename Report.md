@@ -1,13 +1,18 @@
 ### **Algorithms**
-In this project, I used Proximal Policy Optimization (PPO, Shulman2017) to solve Reacher Environment. PPO aims to solve a major limitation in policy gradients methods: data inefficeincy. Each trajectory can validly be used for updating the policy network once in PG, which is wasteful, especially when the generation process is slow, resource-consuming or even dangerous. With tricks of importance sampling, surrogate objectives, and surrogate clipping, the policy network can then be updated multiple times using a generated trajectory (generated from an "old policy") without losing track from the true objective function. This technique enhances data effiency greatly by creating off-policy learning (improving a policy other than the trajectory generating one) alike capability for PG algorithm. 
+In this project, I used Proximal Policy Optimization (PPO) to solve Unity Reacher Environment. PPO aims to solve a major limitation in policy gradients methods: data inefficeincy. 
+Each trajectory can validly be used for updating the policy network only once in Policy Gradients (PG). This is wasteful especially when the generation process is slow, resource-consuming or even dangerous.  
+With tricks of importance sampling, surrogate objectives, and surrogate clipping, the policy network in PPO can then be updated multiple times using a generated trajectory (generated from an "old policy") without losing track from the true objective function. 
+This technique enhances data efficiency greatly by creating off-policy learning (improving a policy other than the trajectory generating one) alike capability for PG algorithm. 
 
 ### **Implementation**
 My implementation is based on the idea of Algorithm 1 in John Schulman et al's 2017 paper: 
 
 
-where policy ($\pi$) is a Gaussian whose mean and variance are tuneable (the mean $\mu$ is represented by a multi-layer fully perceptron whereas the variance is parametrized seperately by another independent set of variables). The advantage is estimated through generalized value estimation (GAE).
+where policy ($\pi$) is a Gaussian whose mean and variance are tuneable (the mean $\mu$ is represented by a multi-layer fully perceptron whereas the variance is parametrized seperately by another independent set of variables). 
+The value function is constructed by a NN sharing the main body with the policy and the output a 1-d state value.
+The advantage is estimated through generalized value estimation (GAE) and it is standardized over trajectories.
 
-In addition, the actor loop for trejectories collection in Algorithm 1 is a perfect fit for parallelization. Parallelization enables efficient data collection (which may accelerate learning) and gathers potentially diverse experience data via, for example, adopting different exploration strategy in each thread. I thus choose multi-agent version of the environment to take advantage of such nature. A buffer (MAReacherTrajectories) is created for storing trajectories using torch.utils.data to organize the data format and mini-batch generation. Note that the current implementation using only fixed exploring strategy (the current policy)
+In addition, the actor loop for trajectories collection in Algorithm 1 is a perfect fit for parallelization. Parallelization enables efficient data collection (which may accelerate learning) and gathers potentially diverse experience data via, for example, adopting different exploration strategy in each thread. I thus choose multi-agent version of the environment to take advantage of such nature. A buffer (MAReacherTrajectories) is created for storing trajectories using torch.utils.data to organize the data format and mini-batch generation. Note that the current implementation using only fixed exploring strategy (the current policy)
 
 ### **Results**  
 
@@ -20,37 +25,46 @@ The agent solves the environment in 187 episodes. The total time elapsed is 1198
 **Video recording of a trained agent**
 
 ### **Future Work**
-- compare the result with other PG based methods
-- play with the latest Soft-Actor Critic.
+- Future experiments:
+    - Compare performance of different value estimators to see if GAE is really the best. The currently available options are:
+        - 1. Monte-Carlo value estimate: the $R_t^{\text{future}}$ in PPO lecture and note that critic is not necessary in this case. 
+        - 2. Direct value estimate: $V(s_t)$
+        - 3. Advantage: $R_t^{\text{future}}$ - $V(s_t)$, the advantage estimate used in A3C paper 
+    - Make it work in OpenAI Gym environments to see how well they work and do benchmarking.
+- The current version is using multiple agents but not written in a genuinely parallel way. Therefore, it will be worthy to delve deeper into parallelization tools such as [MPI](http://mpitutorial.com/tutorials/mpi-introduction/) to further boost learning efficiency.  
+- Compare the current implementation to SOTA methods able to solve continuous problems such as Soft Actor-Critic and D4PG/DDPG to compare their individual learning efficacy/efficiency.
 
 ### **Reference**
 Research Papers:
 - [Proximal Policy Optimization 2017](https://www.nature.com/articles/nature14236)
-- [Dueling DQN 2016](https://arxiv.org/abs/1511.06581)
-- [Double DQN 2016](https://arxiv.org/abs/1509.06461)
+- [A3C 2016](https://arxiv.org/abs/1602.01783)
+- [Soft Actor Critic 2018](https://arxiv.org/abs/1801.01290)
 
-Related Projects:
-- [tnakae: Udacity-DeepRL-p2-Continuous]
-(https://github.com/tnakae/Udacity-DeepRL-p2-Continuous)
+Related works:
+- [tnakae: Udacity-DeepRL-p2-Continuous; greatly appreciated for this work, really helpful for my implementation](https://github.com/tnakae/Udacity-DeepRL-p2-Continuous)
+- [A detailed example of how to generate your data in parallel with PyTorch](https://stanford.edu/~shervine/blog/pytorch-how-to-generate-data-parallel)
 
 
 
-### **Appendix**
-1. Key equations and the corresponding lines of codes in the project are summarized in ![./equations.png](./equations.png) 
-2. Hyperparameters
+### **Appendix** 
+Hyperparameters
 
 | Hyperparameter                      | Value |
 | ----------------------------------- | ----- |
 | Agent Model Type                    | MLP   |
-| Agent Model Arch                    | [in, 20, 20, out] |
-| Update (Learning) Frequency         | every 4 steps |
-| Replay buffer size                  | 1e5   |
-| Batch size                          | 64    |
-| $\gamma$ (discount factor)          | 0.99  |
+| Policy Distribution                 | Gaussian |
+| Agent Model Arch (Policy)           | [in, 512, 256, out] |
+| Agent Model Arch (Critic)*1         | [in, 512, 256, 1] |
+| Trajectory Length (t_max)           | 1000 steps|
+| PPO SDG Epoch                       | 3    |
+| PPO mini-batch size                 | 256  |
+| gamma (discount factor)          | 0.99  |
+| GAE lambda*2                          | 0.96  |
 | Optimizer                           | Adam  |
-| Learning rate                       | 5e-4  |
-| Soft-Update (*1)                      | True  |
-| $\tau$ (soft-update mixing rate)    | 1e-3  |
-| $\epsilon$ (exploration rate) start | 1.0   |
-| $\epsilon$ minimum                  | 0.1   |
-| $\epsilon$ decay                    | 0.995 |
+| Learning rate                       | 1e-4  |
+| epsilon (surrogate clip rate)    | 0.1   |
+| beta (entropy regularization strength) | 0.01   |
+| gradient clip                       | 0.5 |
+
+- *1. The parameters of the first two layers of Policy(Actor) and Critic are shared. 
+- *2. GAE lambda is not exposed for tuning in current implementation (2019.2.20)

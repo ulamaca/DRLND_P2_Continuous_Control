@@ -146,6 +146,7 @@ class PPOActorCritic(PPOPolicy):
             return dist, value
 
 
+# cite from https://github.com/tnakae/Udacity-DeepRL-p2-Continuous
 class FCNetwork(nn.Module):
     def __init__(self, input_dim, hiddens, func=F.leaky_relu):
         super(FCNetwork, self).__init__()
@@ -196,6 +197,7 @@ class GaussianPolicyNetwork(nn.Module):
         return actions, log_prob, entropy, value
 
 
+# cite from https://github.com/tnakae/Udacity-DeepRL-p2-Continuous
 class GaussianActorCriticNetwork(GaussianPolicyNetwork):
     def __init__(self, state_dim=1, action_dim=1, hiddens=[64, 64]):
         super().__init__(state_dim, action_dim, hiddens)

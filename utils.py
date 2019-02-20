@@ -20,15 +20,18 @@ def get_env_spec(env):
             "action_size":action_size}
 
 
-
 # PyTorch Tensor Processing Tools:
+    # cite from https://github.com/tnakae/Udacity-DeepRL-p2-Continuous
 def standardize(tensor):
     return (tensor - tensor.mean()) / (tensor.std() + 1e-6)
 
+
+    # cite from https://github.com/tnakae/Udacity-DeepRL-p2-Continuous
 def to_tensor(x, dtype=np.float32):
     return torch.from_numpy(np.array(x).astype(dtype)) #.to(self.device) #todo, devising problem
 
-# demonstration tools
+
+# Demonstration tools
 def play(env, agent, t_max=1000):
     brain_name = env.brain_names[0]  # this is specific for the Unity Environment
     env_info = env.reset(train_mode=False)[brain_name]  # reset the environment
@@ -58,7 +61,7 @@ def play_random(env, t_max=1000):
             break
 
 
-# misc
+# Misc
 def random_color(choice=False):
     "select the color code from "
     lib=['r', 'b', 'g', 'k', 'y', 'c', 'm']
