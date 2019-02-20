@@ -1,5 +1,5 @@
 [image1]: ./data/ppo_gae.png 
-[image2]: ./data/ppo_algorithm1
+[image2]: ./data/ppo_algorithm1.png
 ### **Algorithms**
 In this project, I used Proximal Policy Optimization (PPO) to solve Unity Reacher Environment. PPO aims to solve a major limitation in policy gradients methods: data inefficeincy. 
 Each trajectory can validly be used for updating the policy network only once in Policy Gradients (PG). This is wasteful especially when the generation process is slow, resource-consuming or even dangerous.  
